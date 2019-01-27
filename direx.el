@@ -1021,6 +1021,32 @@ mouse-2: find this node in other window"))
     (direx:maybe-goto-current-buffer-item buffer)
     buffer))
 
+(defun direx:set-root ()
+  "Sets current direx item's directory as the root"
+  (interactive)
+  (let ((buf (current-buffer)))
+    (switch-to-buffer
+     (direx:find-directory
+      (file-name-directory
+       (direx:file-full-name
+        (direx:item-tree
+         (direx:item-at-point!))))))
+    (kill-buffer buf)))
+
+(defun direx:expand-root-to-parent ()
+  "Attempts to find parent directory of current root item and set that as the root"
+  (interactive)
+  (let ((buf (current-buffer)))
+    (switch-to-buffer
+     (direx:find-directory
+      (file-name-directory
+       (substring
+        (direx:file-full-name
+         (direx:item-tree
+          (direx:item-root
+           (direx:item-at-point!)))) 0 -1))))
+    (kill-buffer buf)))
+
 ;;;###autoload
 (defun direx:jump-to-directory ()
   (interactive)
